@@ -1,10 +1,10 @@
 -- C R E A R  T A B L A S
 
 CREATE TABLE ama_clientes (
-	id_cliente		integer			NOT NULL,
+	id_cliente		integer			NOT NULL		DEFAULT nextval('seq_clientes'),
 	nombre			varchar(10) 	NOT NULL,
 	apellido1		varchar(10)		NOT NULL,
-	nacionalidad	char			NOT NULL		CHECK (nacionalidad IN ('n','e')),
+	nacionalidad	char(1)			NOT NULL		CHECK (nacionalidad IN ('n','e')),
 	fecha_nac		date			NOT NULL,		
 	dni				integer			NOT NULL		UNIQUE,
 	correo			varchar(30)		NOT NULL		UNIQUE,
@@ -13,21 +13,21 @@ CREATE TABLE ama_clientes (
 );
 
 CREATE TABLE ama_lugares_evento (
-	id_lugar		integer			NOT NULL,
+	id_lugar		integer			NOT NULL		DEFAULT nextval('seq_lugares_evento'),
 	nombre			varchar(50) 	NOT NULL,
 	direccion		text			NOT NULL,
 	CONSTRAINT 		pk_luga			PRIMARY KEY		(id_lugar)
 );
 
 CREATE TABLE ama_regiones_rio (
-	id_region		integer			NOT NULL,
-	nombre			char(50) 		NOT NULL,
+	id_region		integer			NOT NULL		DEFAULT nextval('seq_regiones_rio'),
+	nombre			varchar(50) 	NOT NULL,
 	descripcion		text,
 	CONSTRAINT 		pk_reri			PRIMARY KEY		(id_region)
 );
 
 CREATE TABLE ama_empresas (
-	id_empresa		integer			NOT NULL,
+	id_empresa		integer			NOT NULL		DEFAULT nextval('seq_empresas'),
 	nombre			varchar(30) 	NOT NULL		UNIQUE,
 	correo			varchar(30)		NOT NULL		UNIQUE,
 	CONSTRAINT 		pk_empe			PRIMARY KEY		(id_empresa)
@@ -45,12 +45,12 @@ ALTER TABLE ama_autorizaciones
 ADD CONSTRAINT fka_auto_emp     FOREIGN KEY     (id_empresa)    REFERENCES  ama_empresas (id_empresa);
 
 CREATE TABLE ama_tipos_entradas (
-	id_tipo			integer			NOT NULL,
+	id_tipo			integer			NOT NULL		DEFAULT nextval('seq_tipos_entradas'),
 	id_empresa		integer			NOT NULL,
 	tipo_ent		varchar(2)		NOT NULL		CHECK (tipo_ent IN ('GP','GF','AN','SL')),
 	sector			integer			NOT NULL		CHECK ((sector >= 1) AND (sector <= 11)),
 	calidad			integer			NOT NULL		CHECK ((calidad >= 1) AND (calidad <= 8)),
-	tipo_des		char			NOT NULL		CHECK (tipo_des IN ('e', 'c', 'a')),
+	tipo_des		char(1)			NOT NULL		CHECK (tipo_des IN ('e', 'c', 'a')),
 	ubi				varchar(3)						CHECK (ubi IN ('A', 'B','C', 'A/B', 'C/D')),
 	CONSTRAINT 		pk_tien			PRIMARY KEY (id_tipo,id_empresa)	
 );
@@ -59,7 +59,7 @@ ALTER TABLE ama_tipos_entradas
 ADD CONSTRAINT fkt_emp_tip      FOREIGN KEY     (id_empresa)    REFERENCES  ama_autorizaciones (id_empresa);
 
 CREATE TABLE ama_reservas (
-	id_reservas		integer			NOT NULL,
+	id_reservas		integer			NOT NULL		DEFAULT nextval('seq_reservas'),
 	id_cliente		integer			NOT NULL,
 	f_h_emi			timestamp		NOT NULL,
 	monto_reales	real,
@@ -71,7 +71,7 @@ ALTER TABLE ama_reservas
 ADD CONSTRAINT fkr_reser        FOREIGN KEY    (id_cliente)     REFERENCES ama_clientes(id_cliente);
 
 CREATE TABLE ama_escuelas_samba (
-	id_escuela 		integer			NOT NULL,
+	id_escuela 		integer			NOT NULL		DEFAULT nextval('seq_escuelas_samba'),
 	nombre_gres		text			NOT NULL,
 	fecha_funda		date			NOT NULL,
 	direccion		text			NOT NULL,
@@ -87,7 +87,7 @@ ADD CONSTRAINT fkes_escu        FOREIGN KEY    (id_region)      REFERENCES ama_r
 CREATE TABLE ama_hist_grupos (
 	id_escuela		integer			NOT NULL,
 	fecha_ini		date			NOT NULL,
-	grupo			char			NOT NULL		CHECK (grupo IN ('a','e')),
+	grupo			char(1)			NOT NULL		CHECK (grupo IN ('a','e')),
 	fecha_fin		date,
 	CONSTRAINT 		pk_higr			PRIMARY KEY		(id_escuela)
 );
@@ -97,10 +97,10 @@ ADD CONSTRAINT fkhg_idesc 		FOREIGN KEY    (id_escuela)     REFERENCES ama_escue
 
 
 CREATE TABLE ama_protagonistas (
-	id_prota		integer			NOT NULL,
+	id_prota		integer			NOT NULL		DEFAULT nextval('seq_protagonistas'),
 	nombre			varchar(15)		NOT NULL,
 	apellido1		varchar(15)		NOT NULL,
-	genero			char			NOT NULL		CHECK (genero IN ('f','m')),
+	genero			char(1)			NOT NULL		CHECK (genero IN ('f','m')),
 	fecha_nac		date			NOT NULL,
 	dni				integer			NOT NULL		UNIQUE,
 	apellido2		varchar(15),
@@ -115,7 +115,7 @@ ADD CONSTRAINT fkp_idesc        FOREIGN KEY    (id_escuela)     REFERENCES ama_e
 -- D O S  O  M A S  F K
 
 CREATE TABLE ama_carnavales_anuales (
-	ano				integer			NOT NULL,
+	ano				integer			NOT NULL		DEFAULT nextval('seq_carnavales_anuales'),
 	fecha_ini		date			NOT NULL,
 	fecha_fin		date			NOT NULL,
 	id_momo			integer			NOT NULL,
@@ -130,13 +130,13 @@ ADD CONSTRAINT fkca_reina       FOREIGN KEY    (id_reina)       REFERENCES ama_p
 
 CREATE TABLE ama_eventos (
 	ano 			integer			NOT NULL,
-	id_evento		integer			NOT NULL,
+	id_evento		integer			NOT NULL		DEFAULT nextval('seq_eventos'),
 	id_lugar		integer			NOT NULL,
-	tipo			char			NOT NULL		CHECK (tipo IN ('g','d')),
+	tipo			char(1)			NOT NULL		CHECK (tipo IN ('g','d')),
 	fecha_ini		date			NOT NULL,
 	hora_ini		time			NOT NULL,					
 	tipo_audi		integer			NOT NULL,
-	pago			char			NOT NULL		CHECK (pago IN ('s','n')),
+	pago			char(1)			NOT NULL		CHECK (pago IN ('s','n')),
 	descripcion		text,
 	costo_reales	real,
 	CONSTRAINT 		pk_even			PRIMARY KEY (id_evento,ano)
@@ -191,7 +191,7 @@ ADD CONSTRAINT fkde_idemp       FOREIGN KEY (id_empresa)        REFERENCES ama_a
 ADD CONSTRAINT fkde_idres       FOREIGN KEY (id_reservas)       REFERENCES ama_reservas(id_reservas);
 
 CREATE TABLE ama_entradas (
-	id_entrada		integer			NOT NULL,
+	id_entrada		integer			NOT NULL		DEFAULT nextval('seq_entradas'),
 	id_evento		integer			NOT NULL,
 	ano				integer			NOT NULL,
 	id_reservas		integer			NOT NULL,
