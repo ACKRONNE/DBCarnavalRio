@@ -36,8 +36,8 @@ CREATE TABLE ama_empresas (
 -- S O L O  U N A (1)  F O R E I N G  K E Y
 
 CREATE TABLE ama_autorizaciones (
-	cant_max		integer			NOT NULL,
 	id_empresa 		integer			NOT NULL,
+	cant_max		integer			NOT NULL,
 	CONSTRAINT 		pk_auto			PRIMARY KEY		(id_empresa)
 );
 
@@ -47,11 +47,11 @@ ADD CONSTRAINT fka_auto_emp     FOREIGN KEY     (id_empresa)    REFERENCES  ama_
 CREATE TABLE ama_tipos_entradas (
 	id_tipo			integer			NOT NULL,
 	id_empresa		integer			NOT NULL,
-	tipo_ent		varchar(2)		NOT NULL		CHECK (tipo_ent IN ('gp','gf','an','sl')),
+	tipo_ent		varchar(2)		NOT NULL		CHECK (tipo_ent IN ('GP','GF','AN','SL')),
 	sector			integer			NOT NULL		CHECK ((sector >= 1) AND (sector <= 11)),
-	calidad			integer			NOT NULL		CHECK ((calidad >= 1) AND (calidad <= 11)),
+	calidad			integer			NOT NULL		CHECK ((calidad >= 1) AND (calidad <= 8)),
 	tipo_des		char			NOT NULL		CHECK (tipo_des IN ('e', 'c', 'a')),
-	ubi				varchar(3)						CHECK (ubi IN ('a', 'b','c', 'a/b', 'c/d')),
+	ubi				varchar(3)						CHECK (ubi IN ('A', 'B','C', 'A/B', 'C/D')),
 	CONSTRAINT 		pk_tien			PRIMARY KEY (id_tipo,id_empresa)	
 );
 
@@ -180,9 +180,9 @@ ADD CONSTRAINT fkro_idesc       FOREIGN KEY (id_prota)       					REFERENCES ama
 
 
 CREATE TABLE ama_detalles_reservas (
-	cantidad		integer			NOT NULL,
 	id_empresa		integer			NOT NULL,
 	id_reservas		integer			NOT NULL,
+	cantidad		integer			NOT NULL,
  	CONSTRAINT 		pk_dere			PRIMARY KEY (id_empresa, id_reservas)
 );
 

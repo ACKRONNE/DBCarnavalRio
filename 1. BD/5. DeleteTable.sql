@@ -14,4 +14,4 @@ DROP TABLE ama_participaciones CASCADE;
 DROP TABLE ama_roles CASCADE;
 DROP TABLE ama_detalles_reservas CASCADE;
 DROP TABLE ama_entradas CASCADE;
-DROP TABLE ama_historicos_precios CASCADE;
+DROP TABLE ama_hist_precios CASCADE;
